@@ -4,6 +4,7 @@ use serde::Deserialize;
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum Stamp {
+    Auto,
     ClockIn,
     ClockOut,
     StartBreak,
@@ -13,6 +14,7 @@ pub enum Stamp {
 impl Display for Stamp {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let s = match self {
+            Stamp::Auto => "Auto",
             Stamp::ClockIn => "ClockIn",
             Stamp::ClockOut => "ClockOut",
             Stamp::StartBreak => "StartBreak",
@@ -25,6 +27,7 @@ impl Display for Stamp {
 impl Stamp {
     pub fn to_request_params(&self) -> String {
         match self {
+            Stamp::Auto => "DEF".to_string(),
             Stamp::ClockIn => "work_start".to_string(),
             Stamp::ClockOut => "work_end".to_string(),
             Stamp::StartBreak => "rest_start".to_string(),
@@ -34,6 +37,7 @@ impl Stamp {
     pub fn expected_response(&self) -> Response {
         // Note: Ignore `Response.result` and `Response.state`
         match self {
+            Stamp::Auto => Default::default(),
             Stamp::ClockIn => Response {
                 current_status: "working".to_string(),
                 ..Default::default()
